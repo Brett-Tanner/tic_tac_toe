@@ -16,9 +16,11 @@
 # board class 
 class Board
     
-    attr_accessor :blocks, :guess_one, :guess_two
+    attr_accessor :blocks
     
-    # array to store names of blocks (the actual blocks, don't assign them to a variable just put them here)
+    @first_player = 0
+
+    # array to store the actual blocks, don't assign them to a variable just put them here
     @@blocks = []
 
     # method to create game board
@@ -33,18 +35,20 @@ class Board
         puts "#{@@blocks[6].content}#{@@blocks[7].content}#{@@blocks[8].content}"
     end
 
-    # method to choose the first player
+    # method to choose who goes first
     def who_first?
         # get player guesses
         puts "Player 1, guess a number between 1 and 10"
         @guess_one = gets.chomp
         puts "Player 2, guess a number between 1 and 10"
         @guess_two = gets.chomp
-        # check the player guessed a number
+
+        # check the player guessed a number, not a letter or symbol
         begin
             Float(@guess_one)
         rescue ArgumentError => exception
             self.incorrect_input
+            return
         else
             @guess_one = @guess_one.to_f
         end
@@ -52,21 +56,33 @@ class Board
             Float(@guess_two)
         rescue ArgumentError => exception
             self.incorrect_input
+            return
         else
             @guess_two = @guess_two.to_f
         end
-        p @guess_one
-        p @guess_two
-        # check the inputs are between 0 and 10
+
+        # check the numbers are between 0 and 10
         if @guess_one < 0 || @guess_one > 10 || @guess_two < 0 || @guess_two > 10
             self.incorrect_input
+            return
         end
-        # TODO: see which is closest to the randomly generated number
-        
+
+        # declare which is closest
+        rand_num = Random.rand(11)
+        if (rand_num - @guess_one).abs < (rand_num - @guess_two).abs
+            puts "Player 1 goes first"
+            @first_player = 1
+        elsif (rand_num - @guess_one).abs > (rand_num - @guess_two).abs
+            puts "Player 2 goes first"
+            @first_player = 2
+        else
+            puts "It's a tie, try again!"
+            self.who_first?
+        end
     end
 
     def incorrect_input
-        puts "Your guess must be a number between 1 and 10"
+        puts "***Your guess must be a number between 1 and 10***"
         self.who_first?
     end
 
@@ -99,6 +115,4 @@ class Block
 end
 
 test_board = Board.new
-test_board.create_board
-test_board.print_board
 test_board.who_first?
