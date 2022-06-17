@@ -15,6 +15,9 @@
 
 # board class 
 class Board
+    
+    attr_accessor :blocks, :guess_one, :guess_two
+    
     # array to store names of blocks (the actual blocks, don't assign them to a variable just put them here)
     @@blocks = []
 
@@ -28,6 +31,43 @@ class Board
         puts "#{@@blocks[0].content}#{@@blocks[1].content}#{@@blocks[2].content}"
         puts "#{@@blocks[3].content}#{@@blocks[4].content}#{@@blocks[5].content}"
         puts "#{@@blocks[6].content}#{@@blocks[7].content}#{@@blocks[8].content}"
+    end
+
+    # method to choose the first player
+    def who_first?
+        # get player guesses
+        puts "Player 1, guess a number between 1 and 10"
+        @guess_one = gets.chomp
+        puts "Player 2, guess a number between 1 and 10"
+        @guess_two = gets.chomp
+        # check the player guessed a number
+        begin
+            Float(@guess_one)
+        rescue ArgumentError => exception
+            self.incorrect_input
+        else
+            @guess_one = @guess_one.to_f
+        end
+        begin
+            Float(@guess_two)
+        rescue ArgumentError => exception
+            self.incorrect_input
+        else
+            @guess_two = @guess_two.to_f
+        end
+        p @guess_one
+        p @guess_two
+        # check the inputs are between 0 and 10
+        if @guess_one < 0 || @guess_one > 10 || @guess_two < 0 || @guess_two > 10
+            self.incorrect_input
+        end
+        # TODO: see which is closest to the randomly generated number
+        
+    end
+
+    def incorrect_input
+        puts "Your guess must be a number between 1 and 10"
+        self.who_first?
     end
 
     # method to call the clear method on each block (then print)
@@ -61,3 +101,4 @@ end
 test_board = Board.new
 test_board.create_board
 test_board.print_board
+test_board.who_first?
