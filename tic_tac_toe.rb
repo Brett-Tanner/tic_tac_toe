@@ -1,4 +1,4 @@
-# TODO: 2 human players can play against each other on the cmd line, board is displayed in between turns
+# 2 human players can play against each other on the cmd line, board is displayed in between turns
 
 # control flow 
     # 1. call create/print combo method 9 times to create 9 numbered blocks and store them in the array
@@ -18,9 +18,10 @@ class Board
     
     attr_accessor :blocks
     
-    @first_player = 0
+    # stores number of turns so you know when the game's over FIXME: Why do these need to be class variables???
+    @@num_of_turns = 0
 
-    # array to store the actual blocks, don't assign them to a variable just put them here
+    # array to store the actual blocks, don't assign them to a variable just put them here FIXME: Why do these need to be class variables???
     @@blocks = []
 
     # method to create game board
@@ -38,11 +39,10 @@ class Board
     # method to choose who goes first
     def who_first?
         # get player guesses
-        puts "Player 1, guess a number between 1 and 10"
+        puts "Player O, guess a number between 1 and 10"
         @guess_one = gets.chomp
-        puts "Player 2, guess a number between 1 and 10"
+        puts "Player X, guess a number between 1 and 10"
         @guess_two = gets.chomp
-
         # check the player guessed a number, not a letter or symbol
         begin
             Float(@guess_one)
@@ -60,21 +60,19 @@ class Board
         else
             @guess_two = @guess_two.to_f
         end
-
         # check the numbers are between 0 and 10
         if @guess_one < 0 || @guess_one > 10 || @guess_two < 0 || @guess_two > 10
             self.incorrect_input
             return
         end
-
         # declare which is closest
         rand_num = Random.rand(11)
         if (rand_num - @guess_one).abs < (rand_num - @guess_two).abs
-            puts "Player 1 goes first"
-            @first_player = 1
+            puts "Player O goes first"
+            self.player_choice("O")
         elsif (rand_num - @guess_one).abs > (rand_num - @guess_two).abs
-            puts "Player 2 goes first"
-            @first_player = 2
+            puts "Player X goes first"
+            self.player_choice("X")
         else
             puts "It's a tie, try again!"
             self.who_first?
@@ -84,6 +82,44 @@ class Board
     def incorrect_input
         puts "***Your guess must be a number between 1 and 10***"
         self.who_first?
+    end
+
+    def player_choice(player)
+        puts "Player #{player} choose your square (0-8, L-R)"
+        chosen_square = gets.chomp.to_i
+        if chosen_square < 0 || chosen_square > 8
+            puts "***Must be a number between 0 and 8 (inclusive)***"
+            player_choice(player)
+            return
+        end
+        # Set new content if valid move, else ask for input again
+        if @@blocks[chosen_square].content != "O" && @@blocks[chosen_square].content != "X"
+            @@blocks[chosen_square].content = " #{player} "
+            @@num_of_turns += 1
+            self.print_board
+        else
+            puts "***You can't choose an occupied square!***"
+            self.player_choice(player)
+        end
+
+        # end game if 9 turns have passed
+        if @@num_of_turns >= 9
+            self.game_over
+            return
+        end
+        # start next turn
+        case player
+        when "O"
+            self.player_choice("X")
+        when "X"
+            self.player_choice("O")
+        else
+            puts "That's not a valid player"
+        end
+    end
+
+    def game_over #FIXME: How do I keep score?????
+        puts "Result goes here!"
     end
 
     # method to call the clear method on each block (then print)
@@ -115,4 +151,6 @@ class Block
 end
 
 test_board = Board.new
+test_board.create_board
+test_board.print_board
 test_board.who_first?
