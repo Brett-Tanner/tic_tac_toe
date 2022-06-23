@@ -1,39 +1,41 @@
 # 2 human players can play against each other on the cmd line, board is displayed in between turns
 
+# TODO: Remember public and private methods exist
+
 # control flow 
-    # 1. call create/print combo method 9 times to create 9 numbered blocks and store them in the array
+    # 1. call create/print combo method 9 times to create 9 numbered rows and store them in the array
 
     # 1.5 each player picks a random number, the one who's closest to the randomly generated number goes first
 
-    # 2. Ask for the number of the block O wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
-    # 3. change the content of that block to O and re-print the board 
+    # 2. Ask for the number of the Row O wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
+    # 3. change the column of that Row to O and re-print the board 
 
-    # 4. Ask for the number of the block X wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
-    # 5. change the content of that block to X and re-print the board 
+    # 4. Ask for the number of the Row X wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
+    # 5. change the column of that Row to X and re-print the board 
 
-    # 6. each time the board is reprinted, check for a winner (e.g if 1 == 2 && 2 == 3, puts winner is #{2.content}, also check the middle one isn't equal to the constant), also check if .all?(!=CONSTANT and if so declare a tie)
+    # 6. each time the board is reprinted, check for a winner (e.g if 1 == 2 && 2 == 3, puts winner is #{2.column}, also check the middle one isn't equal to the constant), also check if .all?(!=CONSTANT and if so declare a tie)
 
 # board class 
 class Board
     
-    attr_accessor :blocks
+    attr_accessor :rows
     
     # stores number of turns so you know when the game's over FIXME: Why do these need to be class variables???
     @@num_of_turns = 0
 
-    # array to store the actual blocks, don't assign them to a variable just put them here FIXME: Why do these need to be class variables???
-    @@blocks = []
+    # array to store the actual rows, don't assign them to a variable just put them here FIXME: Why do these need to be class variables???
+    @@rows = []
 
     # method to create game board
     def create_board
-        9.times {|i| @@blocks.push(Block.new)}
+        3.times {|i| @@rows.push(Row.new)}
     end
 
     # method to print board
     def print_board
-        puts "#{@@blocks[0].content}#{@@blocks[1].content}#{@@blocks[2].content}"
-        puts "#{@@blocks[3].content}#{@@blocks[4].content}#{@@blocks[5].content}"
-        puts "#{@@blocks[6].content}#{@@blocks[7].content}#{@@blocks[8].content}"
+        puts "#{@@rows[0].column.join}"
+        puts "#{@@rows[1].column.join}"
+        puts "#{@@rows[2].column.join}"
     end
 
     # method to choose who goes first
@@ -92,9 +94,9 @@ class Board
             player_choice(player)
             return
         end
-        # Set new content if valid move, else ask for input again
-        if @@blocks[chosen_square].content != "O" && @@blocks[chosen_square].content != "X"
-            @@blocks[chosen_square].content = " #{player} "
+        # Set new column if valid move, else ask for input again
+        if @@rows[chosen_square].column != "O" && @@rows[chosen_square].column != "X"
+            @@rows[chosen_square].column = " #{player} "
             @@num_of_turns += 1
             self.print_board
         else
@@ -122,35 +124,35 @@ class Board
         puts "Result goes here!"
     end
 
-    # method to call the clear method on each block (then print)
+    # method to call the clear method on each Row (then print)
     def reset_game
-        # FIXME: claims DEFAULT_CONTENTS is undefined, switching order doesn't solve it
-        @@blocks.each {|value| value.content = Block.DEFAULT_CONTENTS}
+        # FIXME: claims DEFAULT_COLUMNS is undefined, switching order doesn't solve it
+        @@rows.each {|value| value.column = Row.DEFAULT_COLUMNS}
         self.print_board
     end
 
 end
 
-# block class
-class Block
-    attr_accessor :content, :DEFAULT_CONTENTS
+# Row class
+class Row
+    attr_accessor :column, :DEFAULT_COLUMNS
     
-    # CONSTANT for the default contents of a block
-    @@DEFAULT_CONTENTS = " # "
+    # CONSTANT for the default columns of a Row
+    @@DEFAULT_COLUMNS = [" # ", " # ", " # "]
 
     def initialize
-        @content = @@DEFAULT_CONTENTS
+        @column = @@DEFAULT_COLUMNS
     end
 
-    # variable to store the content of the block, by default set to CONSTANT
+    # variable to store the column of the Row, by default set to CONSTANT
 
-    # method to clear the block at game end
+    # method to clear the Row at game end
 
-    # method to add passed contents (X or O)
+    # method to add passed columns (X or O)
 
 end
 
 test_board = Board.new
 test_board.create_board
 test_board.print_board
-test_board.who_first?
+# test_board.who_first?
