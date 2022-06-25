@@ -29,6 +29,7 @@ class Board
     # method to create game board
     def create_board
         3.times {|i| @@rows.push(Row.new)}
+        self.print_board
     end
 
     # method to print board
@@ -70,10 +71,10 @@ class Board
         # declare which is closest
         rand_num = Random.rand(11)
         if (rand_num - @guess_one).abs < (rand_num - @guess_two).abs
-            puts "Player O goes first"
+            puts "O goes first"
             self.player_choice("O")
         elsif (rand_num - @guess_one).abs > (rand_num - @guess_two).abs
-            puts "Player X goes first"
+            puts "X goes first"
             self.player_choice("X")
         else
             puts "It's a tie, try again!"
@@ -87,37 +88,39 @@ class Board
     end
 
     def player_choice(player)
-        puts "Player #{player} choose your square (0-8, L-R)"
-        chosen_square = gets.chomp.to_i
-        if chosen_square < 0 || chosen_square > 8
-            puts "***Must be a number between 0 and 8 (inclusive)***"
-            player_choice(player)
-            return
-        end
-        # Set new column if valid move, else ask for input again
-        if @@rows[chosen_square].column != "O" && @@rows[chosen_square].column != "X"
-            @@rows[chosen_square].column = " #{player} "
-            @@num_of_turns += 1
-            self.print_board
-        else
-            puts "***You can't choose an occupied square!***"
-            self.player_choice(player)
-        end
+        puts "#{player} enter row and column separated by a space (0-2)"
+        coordinates = gets.chomp.split
+        chosen_row = coordinates[0].to_i
+        chosen_column = coordinates[1].to_i
+        # if chosen_row < 0 || chosen_row > 8
+        #     puts "***Must be a number between 0 and 8 (inclusive)***"
+        #     player_choice(player)
+        #     return
+        # end
+        # # Set new column if valid move, else ask for input again
+        # if @@rows[chosen_row].column != "O" && @@rows[chosen_row].column != "X"
+        #     @@rows[chosen_row].column = " #{player} "
+        #     @@num_of_turns += 1
+        #     self.print_board
+        # else
+        #     puts "***You can't choose an occupied square!***"
+        #     self.player_choice(player)
+        # end
 
-        # end game if 9 turns have passed
-        if @@num_of_turns >= 9
-            self.game_over
-            return
-        end
-        # start next turn
-        case player
-        when "O"
-            self.player_choice("X")
-        when "X"
-            self.player_choice("O")
-        else
-            puts "That's not a valid player"
-        end
+        # # end game if 9 turns have passed
+        # if @@num_of_turns >= 9
+        #     self.game_over
+        #     return
+        # end
+        # # start next turn
+        # case player
+        # when "O"
+        #     self.player_choice("X")
+        # when "X"
+        #     self.player_choice("O")
+        # else
+        #     puts "That's not a valid player"
+        # end
     end
 
     def game_over #FIXME: How do I keep score?????
@@ -154,5 +157,4 @@ end
 
 test_board = Board.new
 test_board.create_board
-test_board.print_board
-# test_board.who_first?
+test_board.who_first?
