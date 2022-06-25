@@ -92,11 +92,11 @@ class Board
         coordinates = gets.chomp.split
         chosen_row = coordinates[0].to_i
         chosen_column = coordinates[1].to_i
-        # if chosen_row < 0 || chosen_row > 8
-        #     puts "***Must be a number between 0 and 8 (inclusive)***"
-        #     player_choice(player)
-        #     return
-        # end
+        if chosen_row < 0 || chosen_row > 2 || chosen_column < 0 || chosen_row > 2
+            puts "***Coordinates must be between 0 and 2 (inclusive)***"
+            player_choice(player)
+            return
+        end
         # # Set new column if valid move, else ask for input again
         # if @@rows[chosen_row].column != "O" && @@rows[chosen_row].column != "X"
         #     @@rows[chosen_row].column = " #{player} "
