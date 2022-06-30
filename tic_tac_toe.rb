@@ -13,30 +13,22 @@
     # 4. Ask for the number of the Row X wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
     # 5. change the column of that Row to X and re-print the board 
 
-    # 6. each time the board is reprinted, check for a winner (e.g if 1 == 2 && 2 == 3, puts winner is #{2.column}, also check the middle one isn't equal to the constant), also check if .all?(!=CONSTANT and if so declare a tie)
+    # 6. each time the board is reprinted, check for a winner (e.g if 1 == 2 && 2 == 3, puts winner is #{2}, also check the middle one isn't equal to the constant), also check if .all?(!=CONSTANT and if so declare a tie)
 
-# board class 
-class Board
+# Game class 
+class Game
     
     attr_accessor :rows
     
-    # stores number of turns so you know when the game's over FIXME: Why do these need to be class variables???
-    @@num_of_turns = 0
-
-    # array to store the actual rows, don't assign them to a variable just put them here FIXME: Why do these need to be class variables???
-    @@rows = []
-
-    # method to create game board
-    def create_board
-        3.times {|i| @@rows.push(Row.new)}
-        self.print_board
+    
+    def initialize
+        @board = Array.new(3) {Array.new(3, " # ")}
+        @num_of_turns = 0
     end
 
     # method to print board
     def print_board
-        puts "#{@@rows[0].column.join}"
-        puts "#{@@rows[1].column.join}"
-        puts "#{@@rows[2].column.join}"
+        3.times { |i| puts @board[i].join}
     end
 
     # method to choose who goes first
@@ -97,30 +89,33 @@ class Board
             player_choice(player)
             return
         end
-        # # Set new column if valid move, else ask for input again
-        # if @@rows[chosen_row].column != "O" && @@rows[chosen_row].column != "X"
-        #     @@rows[chosen_row].column = " #{player} "
-        #     @@num_of_turns += 1
-        #     self.print_board
-        # else
-        #     puts "***You can't choose an occupied square!***"
-        #     self.player_choice(player)
-        # end
+        # Set new column if valid move, else ask for input again FIXME: changes the whole column, not just in one row !! This is caused by attaching an index to the column setter for some reason, when you change the whole row it works fine
+        if @board[chosen_row][chosen_column] != " O " && @board[chosen_row][chosen_column] != " X "
+            p chosen_row
+            p chosen_column
+            p @board[chosen_row][chosen_column]
+            @board[chosen_row][chosen_column] = " #{player} "
+            p @board[chosen_row][chosen_column]
+            self.print_board
+        else
+            puts "***You can't choose an occupied square!***"
+            self.player_choice(player)
+        end
 
-        # # end game if 9 turns have passed
-        # if @@num_of_turns >= 9
+        # end game if FIXME:
+        # if  >= 9
         #     self.game_over
         #     return
         # end
-        # # start next turn
-        # case player
-        # when "O"
-        #     self.player_choice("X")
-        # when "X"
-        #     self.player_choice("O")
-        # else
-        #     puts "That's not a valid player"
-        # end
+        # start next turn
+        case player
+        when "O"
+            self.player_choice("X")
+        when "X"
+            self.player_choice("O")
+        else
+            puts "That's not a valid player"
+        end
     end
 
     def game_over #FIXME: How do I keep score?????
@@ -130,31 +125,12 @@ class Board
     # method to call the clear method on each Row (then print)
     def reset_game
         # FIXME: claims DEFAULT_COLUMNS is undefined, switching order doesn't solve it
-        @@rows.each {|value| value.column = Row.DEFAULT_COLUMNS}
+        @board.each {|value| value = Row.DEFAULT_COLUMNS}
         self.print_board
     end
 
 end
 
-# Row class
-class Row
-    attr_accessor :column, :DEFAULT_COLUMNS
-    
-    # CONSTANT for the default columns of a Row
-    @@DEFAULT_COLUMNS = [" # ", " # ", " # "]
-
-    def initialize
-        @column = @@DEFAULT_COLUMNS
-    end
-
-    # variable to store the column of the Row, by default set to CONSTANT
-
-    # method to clear the Row at game end
-
-    # method to add passed columns (X or O)
-
-end
-
-test_board = Board.new
-test_board.create_board
-test_board.who_first?
+test_game = Game.new
+test_game.print_board
+test_game.who_first?
