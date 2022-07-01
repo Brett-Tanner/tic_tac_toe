@@ -1,19 +1,6 @@
-# 2 human players can play against each other on the cmd line, board is displayed in between turns
+require 'pry-byebug'
 
 # TODO: Remember public and private methods exist
-
-# control flow 
-    # 1. call create/print combo method 9 times to create 9 numbered rows and store them in the array
-
-    # 1.5 each player picks a random number, the one who's closest to the randomly generated number goes first
-
-    # 2. Ask for the number of the Row O wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
-    # 3. change the column of that Row to O and re-print the board 
-
-    # 4. Ask for the number of the Row X wants to take (only accept if == CONSTANT, otherwise chide them for cheating) 
-    # 5. change the column of that Row to X and re-print the board 
-
-    # 6. each time the board is reprinted, check for a winner (e.g if 1 == 2 && 2 == 3, puts winner is #{2}, also check the middle one isn't equal to the constant), also check if .all?(!=CONSTANT and if so declare a tie)
 
 # Game class 
 class Game
@@ -89,24 +76,21 @@ class Game
             player_choice(player)
             return
         end
-        # Set new column if valid move, else ask for input again FIXME: changes the whole column, not just in one row !! This is caused by attaching an index to the column setter for some reason, when you change the whole row it works fine
+        # Set new column if valid move, else ask for input again
         if @board[chosen_row][chosen_column] != " O " && @board[chosen_row][chosen_column] != " X "
-            p chosen_row
-            p chosen_column
-            p @board[chosen_row][chosen_column]
             @board[chosen_row][chosen_column] = " #{player} "
-            p @board[chosen_row][chosen_column]
             self.print_board
         else
             puts "***You can't choose an occupied square!***"
             self.player_choice(player)
         end
 
-        # end game if FIXME:
-        # if  >= 9
-        #     self.game_over
-        #     return
-        # end
+        # end game if TODO: check vertical, then diagonal
+        if self.row_win? # || self.column_win? || self.diagonal_win?
+            self.game_over(player)
+            return
+        end
+        
         # start next turn
         case player
         when "O"
@@ -118,14 +102,28 @@ class Game
         end
     end
 
-    def game_over #FIXME: How do I keep score?????
-        puts "Result goes here!"
+    # FIXME: Doesn't detect anything 
+    def row_win?
+        @board.any? { |row| row.all?(" O ") || row.all?(" X ")}
     end
 
-    # method to call the clear method on each Row (then print)
+    # TODO: 
+    def column_win?
+        
+    end
+
+    # TODO: 
+    def diagonal_win?
+        
+    end
+
+    def game_over(player) #TODO: 
+        puts "#{player} wins!"
+    end
+
+    # TODO:
     def reset_game
-        # FIXME: claims DEFAULT_COLUMNS is undefined, switching order doesn't solve it
-        @board.each {|value| value = Row.DEFAULT_COLUMNS}
+        
         self.print_board
     end
 
