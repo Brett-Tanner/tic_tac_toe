@@ -85,8 +85,8 @@ class Game
             self.player_choice(player)
         end
 
-        # end game if TODO: check vertical, then diagonal
-        if self.row_win? || self.diagonal_win? # || self.column_win? 
+        # end game if there's a winner or the board is full 
+        if self.row_win? || self.diagonal_win? || self.column_win? # ||board_full?
             self.game_over(player)
             return
         end
@@ -106,9 +106,13 @@ class Game
         @board.any? { |row| row.all?(" O ") || row.all?(" X ")}
     end
 
-    # TODO: 
     def column_win?
-        
+        first_column = [@board[0][0], @board[1][0], @board[2][0]]
+        second_column = [@board[0][1], @board[1][1], @board[2][1]]
+        third_column = [@board[0][2], @board[1][2], @board[2][2]]
+        if first_column.all?(" O ") || second_column.all?(" O ") || third_column.all?(" O ") || first_column.all?(" X ") || second_column.all?(" X ") || third_column.all?(" X ")
+            true
+        end
     end
 
     def diagonal_win?
@@ -117,6 +121,10 @@ class Game
        if top_left.all?(" O ") || bottom_left.all?(" O ") || top_left.all?(" X ") || bottom_left.all?(" X ")
         true
        end
+    end
+
+    def board_full?
+        
     end
 
     def game_over(player)
