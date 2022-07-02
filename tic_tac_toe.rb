@@ -86,9 +86,11 @@ class Game
         end
 
         # end game if there's a winner or the board is full 
-        if self.row_win? || self.diagonal_win? || self.column_win? # ||board_full?
+        if self.row_win? || self.diagonal_win? || self.column_win?
             self.game_over(player)
             return
+        elsif self.board_full?
+            self.reset_game
         end
         
         # start next turn
@@ -124,7 +126,7 @@ class Game
     end
 
     def board_full?
-        
+        @board.all? { |row| row.all? { |column| column != " # "}}
     end
 
     def game_over(player)
