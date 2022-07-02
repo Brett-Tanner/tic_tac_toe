@@ -86,7 +86,7 @@ class Game
         end
 
         # end game if TODO: check vertical, then diagonal
-        if self.row_win? # || self.column_win? || self.diagonal_win?
+        if self.row_win? || self.diagonal_win? # || self.column_win? 
             self.game_over(player)
             return
         end
@@ -102,7 +102,6 @@ class Game
         end
     end
 
-    # FIXME: Doesn't detect anything 
     def row_win?
         @board.any? { |row| row.all?(" O ") || row.all?(" X ")}
     end
@@ -112,12 +111,15 @@ class Game
         
     end
 
-    # TODO: 
     def diagonal_win?
-        
+        top_left = [@board[0][0], @board[1][1], @board[2][2]]
+        bottom_left = [@board[2][0], @board[1][1], @board[0][2]]
+       if top_left.all?(" O ") || bottom_left.all?(" O ") || top_left.all?(" X ") || bottom_left.all?(" X ")
+        true
+       end
     end
 
-    def game_over(player) #TODO: 
+    def game_over(player)
         puts "#{player} wins!"
     end
 
