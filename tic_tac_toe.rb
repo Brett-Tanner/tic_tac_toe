@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 # TODO: Remember public and private methods exist
 
 # Game class 
@@ -9,6 +7,7 @@ class Game
     
     def initialize
         @board = Array.new(3) {Array.new(3, " # ")}
+        self.who_first?
     end
 
     # method to print board
@@ -145,8 +144,6 @@ class Game
         answer = gets.chomp.downcase
         if answer == "y"
             self.initialize
-            self.print_board
-            self.who_first?
         elsif answer == "n"
             return
         else
@@ -158,6 +155,4 @@ class Game
 
 end
 
-test_game = Game.new
-test_game.print_board
-test_game.who_first?
+Game.new
