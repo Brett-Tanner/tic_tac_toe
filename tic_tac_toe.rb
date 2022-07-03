@@ -7,7 +7,6 @@ class Game
     
     attr_accessor :rows
     
-    
     def initialize
         @board = Array.new(3) {Array.new(3, " # ")}
         @num_of_turns = 0
@@ -67,12 +66,18 @@ class Game
     end
 
     def player_choice(player)
-        puts "#{player} enter row and column separated by a space (0-2)"
+        puts "#{player} enter row and column separated by a space"
         coordinates = gets.chomp.split
-        chosen_row = coordinates[0].to_i
-        chosen_column = coordinates[1].to_i
+        begin
+            chosen_row = coordinates[0].to_i - 1
+            chosen_column = coordinates[1].to_i - 1
+        rescue NoMethodError => exception
+            puts "You made a typo"
+            player_choice(player)
+            return
+        end
         if chosen_row < 0 || chosen_row > 2 || chosen_column < 0 || chosen_row > 2
-            puts "***Coordinates must be between 0 and 2 (inclusive)***"
+            puts "***Coordinates must be between 1 and 3 (inclusive)***"
             player_choice(player)
             return
         end
@@ -131,12 +136,23 @@ class Game
 
     def game_over(player)
         puts "#{player} wins!"
+        self.reset_game
     end
 
-    # TODO:
-    def reset_game
+    def reset_game # FIXME: doesn't change the board
+        puts "Would you like to play again? (y/n)"
+        answer = gets.chomp.downcase
+        if answer == "y"
+            @board.each { |row| row = [" # ", " # ", " # "]}
+            self.print_board
+            self.who_first?
+        elsif answer == "n"
+            return
+        else
+            puts "***Please answer 'y' or 'n'***"
+            self.reset_game
+        end
         
-        self.print_board
     end
 
 end
