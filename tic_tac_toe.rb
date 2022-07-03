@@ -9,7 +9,6 @@ class Game
     
     def initialize
         @board = Array.new(3) {Array.new(3, " # ")}
-        @num_of_turns = 0
     end
 
     # method to print board
@@ -50,9 +49,11 @@ class Game
         rand_num = Random.rand(11)
         if (rand_num - @guess_one).abs < (rand_num - @guess_two).abs
             puts "O goes first"
+            self.print_board
             self.player_choice("O")
         elsif (rand_num - @guess_one).abs > (rand_num - @guess_two).abs
             puts "X goes first"
+            self.print_board
             self.player_choice("X")
         else
             puts "It's a tie, try again!"
@@ -139,11 +140,11 @@ class Game
         self.reset_game
     end
 
-    def reset_game # FIXME: doesn't change the board
+    def reset_game
         puts "Would you like to play again? (y/n)"
         answer = gets.chomp.downcase
         if answer == "y"
-            @board.each { |row| row = [" # ", " # ", " # "]}
+            self.initialize
             self.print_board
             self.who_first?
         elsif answer == "n"
