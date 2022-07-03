@@ -1,6 +1,3 @@
-# TODO: Remember public and private methods exist
-
-# Game class 
 class Game
     
     attr_accessor :rows
@@ -10,18 +7,19 @@ class Game
         self.who_first?
     end
 
-    # method to print board
+    private
+
     def print_board
         3.times { |i| puts @board[i].join}
     end
 
-    # method to choose who goes first
     def who_first?
         # get player guesses
         puts "Player O, guess a number between 1 and 10"
         @guess_one = gets.chomp
         puts "Player X, guess a number between 1 and 10"
         @guess_two = gets.chomp
+        
         # check the player guessed a number, not a letter or symbol
         begin
             Float(@guess_one)
@@ -39,11 +37,13 @@ class Game
         else
             @guess_two = @guess_two.to_f
         end
+        
         # check the numbers are between 0 and 10
         if @guess_one < 0 || @guess_one > 10 || @guess_two < 0 || @guess_two > 10
             self.incorrect_input
             return
         end
+        
         # declare which is closest
         rand_num = Random.rand(11)
         if (rand_num - @guess_one).abs < (rand_num - @guess_two).abs
@@ -81,6 +81,7 @@ class Game
             player_choice(player)
             return
         end
+        
         # Set new column if valid move, else ask for input again
         if @board[chosen_row][chosen_column] != " O " && @board[chosen_row][chosen_column] != " X "
             @board[chosen_row][chosen_column] = " #{player} "
