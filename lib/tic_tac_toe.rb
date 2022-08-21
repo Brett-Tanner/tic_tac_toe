@@ -9,7 +9,8 @@ class Game
   public
 
   def play_game
-    who_first()
+    first_player = who_first()
+    # player_choice(first_player)
   end
 
   def who_first
@@ -20,8 +21,7 @@ class Game
     # check the numbers are between 0 and 10
     if o_guess < 0 || o_guess > 10 || x_guess < 0 || x_guess > 10
       puts "***Your guess must be between 0 and 10***"
-      who_first()
-      return
+      return who_first()
     end
     
     # declare which is closest
@@ -40,19 +40,8 @@ class Game
     end
   end
 
-  private
-
-  def print_board
-    3.times { |i| puts @board[i].join}
-  end
-
-  def player_input(message)
-    puts message
-    gets.chomp
-  end
-
   def player_choice(player)
-      puts "#{player} enter row and column separated by a space"
+    puts "#{player} enter row and column separated by a space"
     coordinates = gets.chomp.split
     begin
         chosen_row = coordinates[0].to_i - 1
@@ -67,7 +56,7 @@ class Game
         player_choice(player)
         return
     end
-    
+  
     # Set new column if valid move, else ask for input again
     if @board[chosen_row][chosen_column] != " O " && @board[chosen_row][chosen_column] != " X "
         @board[chosen_row][chosen_column] = " #{player} "
@@ -83,7 +72,7 @@ class Game
     elsif self.board_full?
         self.reset_game
     end
-    
+
     # start next turn
     case player
     when "O"
@@ -93,6 +82,17 @@ class Game
     else
         puts "That's not a valid player"
     end
+  end
+
+  private
+
+  def print_board
+    3.times { |i| puts @board[i].join}
+  end
+
+  def player_input(message)
+    puts message
+    gets.chomp
   end
 
   def row_win?

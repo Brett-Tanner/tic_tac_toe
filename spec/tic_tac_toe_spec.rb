@@ -80,40 +80,59 @@ describe Game do
       end
     end
 
-    context "A player makes an invalid guess" do
+    context "when one player makes an invalid guess" do
       before do
         allow(game).to receive(:gets).and_return("11", "5", "9", "5")
-        allow(game).to receive(:rand).and_return("9")
+        allow(game).to receive(:rand).and_return(9)
       end
 
-      xit "displays an error message" do
+      it "displays an error message" do
         error = "***Your guess must be between 0 and 10***"
         expect(game).to receive(:puts).with(error).once
         game.who_first
       end
 
-      xit "still returns the first player" do
+      it "still returns the first player" do
         first_player = game.who_first
         expect(first_player).to eql("O")
       end
     end
 
-    context "Both players make an invalid guess" do
+    context "when both players make an invalid guess" do
       before do
         allow(game).to receive(:gets).and_return("11", "-5", "6", "5")
-        allow(game).to receive(:rand).and_return("5")
+        allow(game).to receive(:rand).and_return(5)
       end
 
-      xit "displays an error message" do
+      it "displays an error message" do
         error = "***Your guess must be between 0 and 10***"
         expect(game).to receive(:puts).with(error).once
         game.who_first
       end
 
-      xit "still returns the first player" do
+      it "still returns the first player" do
         first_player = game.who_first
         expect(first_player).to eql("X")
       end
+    end
+  end
+
+  describe "#player_choice" do
+    
+    context "when player is X" do
+      
+    end
+
+    context "when player is O" do
+      
+    end
+
+    context "when player enters valid coordinates" do
+      
+    end
+
+    context "when player enters invalid coordinates" do
+      
     end
   end
 end
