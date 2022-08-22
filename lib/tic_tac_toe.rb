@@ -11,7 +11,7 @@ class Game
 
   def play_game
     first_player = who_first()
-    # player_turn(first_player)
+    player_turn(first_player)
   end
 
   def who_first
@@ -60,11 +60,9 @@ class Game
   end
 
   def out_of_bounds?(row, col)
-    if row < 0 || row > 2 || col < 0 || row > 2
-      puts "***coord must be between 1 and 3 (inclusive)***"
-      return true
-    end
-    false
+    return false if row >= 0 && row <= 2 && col >= 0 && col <= 2
+    puts "***Row/col must be 1, 2 or 3***"
+    true
   end
 
   def occupied?(row, col)

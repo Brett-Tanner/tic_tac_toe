@@ -131,6 +131,13 @@ describe Game do
         occupied = game.occupied?(row, col)
         expect(occupied).to be false
       end
+
+      it "doesn't display an error" do
+        rwo = 0
+        col = 0
+        error = "***You can't choose an occupied square!***"
+        expect(game).not_to receive(:puts).with(error)
+      end
     end
 
     context "square is occupied" do
@@ -150,7 +157,7 @@ describe Game do
         row = 1
         col = 1
         error = "***You can't choose an occupied square!***"
-        expect(game).to receive(:puts).with(error)
+        expect(game).to receive(:puts).with(error).once
         game.occupied?(row, col)
       end
     end
@@ -158,16 +165,77 @@ describe Game do
 
   describe "#out_of_bounds?" do
     
-    context "one coordinate out of bounds" do
-      
+    before do
+      allow(game).to receive(:puts)
     end
 
-    context "both coordinates out of bounds" do
+    context "coordinates too high" do
       
+      it "displays an error message" do
+        row = 3
+        col = 10
+        error = "***Row/col must be 1, 2 or 3***"
+        expect(game).to receive(:puts).with(error).once
+        game.out_of_bounds?(row, col)
+      end
+      
+      it "returns true" do
+        row = 3
+        col = 10
+        out_of_bounds = game.out_of_bounds?(row, col)
+        expect(out_of_bounds).to eql(true)
+      end
     end
 
-    context "both coordinates in bounds" do
+    context "coordinates too low" do
+      it "displays an error message" do
+        row = -1
+        col = -10
+        error = "***Row/col must be 1, 2 or 3***"
+        expect(game).to receive(:puts).with(error).once
+        game.out_of_bounds?(row, col)
+      end
       
+      it "returns true" do
+        row = -3
+        col = -10
+        out_of_bounds = game.out_of_bounds?(row, col)
+        expect(out_of_bounds).to eql(true)
+      end
+    end
+
+    context "only one coordinate is incorrect" do
+      it "displays an error message" do
+        row = 3
+        col = 1
+        error = "***Row/col must be 1, 2 or 3***"
+        expect(game).to receive(:puts).with(error).once
+        game.out_of_bounds?(row, col)
+      end
+      
+      it "returns true" do
+        row = 3
+        col = 1
+        out_of_bounds = game.out_of_bounds?(row, col)
+        expect(out_of_bounds).to eql(true)
+      end
+    end
+
+    context "both row & col in bounds" do
+      it "returns false" do
+        row = 0
+        col = 2
+        out_of_bounds = game.out_of_bounds?(row, col)
+        expect(out_of_bounds).to eql(false)
+      end
+
+      it "doesn't display an error" do
+        row = 0
+        col = 2
+        error = "***Row/col must be 1, 2 or 3***"
+        expect(game).not_to receive(:puts).with(error)
+        game.out_of_bounds?(row, col)
+      end
     end
   end
 
