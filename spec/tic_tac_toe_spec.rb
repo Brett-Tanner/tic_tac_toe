@@ -117,22 +117,94 @@ describe Game do
     end
   end
 
-  describe "#player_choice" do
+  describe "#occupied?" do
+
+    before do
+      game.board = [" # ", " # ", " # "], [" X ", " X ", " X "], [" O ", " O ", " O "]
+    end
+
+    context "square is unoccupied" do
+      
+      it "returns false" do
+        row = 0
+        col = 0
+        occupied = game.occupied?(row, col)
+        expect(occupied).to be false
+      end
+    end
+
+    context "square is occupied" do
+      
+      before do
+        allow(game).to receive(:puts)
+      end
+
+      it "returns true" do
+        row = 1
+        col = 1
+        occupied = game.occupied?(row, col)
+        expect(occupied).to be true
+      end
+
+      it "displays an error" do
+        row = 1
+        col = 1
+        error = "***You can't choose an occupied square!***"
+        expect(game).to receive(:puts).with(error)
+        game.occupied?(row, col)
+      end
+    end
+  end
+
+  describe "#out_of_bounds?" do
     
-    context "when player is X" do
+    context "one coordinate out of bounds" do
       
     end
 
-    context "when player is O" do
+    context "both coordinates out of bounds" do
       
     end
 
-    context "when player enters valid coordinates" do
-      
-    end
-
-    context "when player enters invalid coordinates" do
+    context "both coordinates in bounds" do
       
     end
   end
+
+  describe "#game_over?" do
+    
+  end
+
+  describe "#player_turn" do
+    
+    context "when player is X" do
+      before do
+        allow(game).to receive(:who_first).and_return("X")
+      end
+
+      xit "asks X for coordinates 5 times" do
+        
+      end
+
+      xit "asks O for coordinates 4 times" do
+        
+      end
+    end
+
+    context "when player is O" do
+      before do
+        allow(game).to receive(:who_first).and_return("O")
+      end
+
+      xit "asks O for coordinates 5 times" do
+        
+      end
+
+      xit "asks X for coordinates 4 times" do
+        
+      end
+    end
+  end
+
+  
 end

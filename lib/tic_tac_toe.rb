@@ -1,16 +1,17 @@
 class Game
     
-  attr_accessor :rows
+  attr_accessor :board
     
   def initialize
     @board = Array.new(3) {Array.new(3, " # ")}
+    @turn_count = 0
   end
 
   public
 
   def play_game
     first_player = who_first()
-    # player_choice(first_player)
+    # player_turn(first_player)
   end
 
   def who_first
@@ -40,48 +41,40 @@ class Game
     end
   end
 
-  def player_choice(player)
-    puts "#{player} enter row and column separated by a space"
-    coordinates = gets.chomp.split
-    begin
-        chosen_row = coordinates[0].to_i - 1
-        chosen_column = coordinates[1].to_i - 1
-    rescue NoMethodError => exception
-        puts "You made a typo"
-        player_choice(player)
-        return
-    end
-    if chosen_row < 0 || chosen_row > 2 || chosen_column < 0 || chosen_row > 2
-        puts "***Coordinates must be between 1 and 3 (inclusive)***"
-        player_choice(player)
-        return
-    end
-  
-    # Set new column if valid move, else ask for input again
-    if @board[chosen_row][chosen_column] != " O " && @board[chosen_row][chosen_column] != " X "
-        @board[chosen_row][chosen_column] = " #{player} "
-        self.print_board
-    else
-        puts "***You can't choose an occupied square!***"
-        self.player_choice(player)
-    end
-    # end game if there's a winner or the board is full 
-    if self.row_win? || self.diagonal_win? || self.column_win?
-        self.game_over(player)
-        return
-    elsif self.board_full?
-        self.reset_game
-    end
+  def player_turn(player)
+    # get the square player wants to take
+    coord = player_input("#{player} enter row and column separated by a space").split
+    row = coord[0].to_i - 1
+    col = coord[1].to_i - 1
 
-    # start next turn
-    case player
-    when "O"
-        self.player_choice("X")
-    when "X"
-        self.player_choice("O")
-    else
-        puts "That's not a valid player"
+    # check it's a valid move
+    return player_turn(player) if out_of_bounds?(row, col) || occupied?(row, col)
+    @board[row][col] = " #{player} "
+  
+    # print the new board and move to next turn or end game
+    print_board()
+    @turn_count += 1
+    return reset_game() if @turn_count >= 9
+    game_over?()
+    player == "X" ? player_turn("O") : player_turn("X")
+  end
+
+  def out_of_bounds?(row, col)
+    if row < 0 || row > 2 || col < 0 || row > 2
+      puts "***coord must be between 1 and 3 (inclusive)***"
+      return true
     end
+    false
+  end
+
+  def occupied?(row, col)
+    return false if @board[row][col] == " # "
+    puts "***You can't choose an occupied square!***"
+    true
+  end
+
+  def game_over?
+    return self.end_game(player) if self.row_win? || self.diagonal_win? || self.column_win?
   end
 
   private
@@ -120,7 +113,7 @@ class Game
     @board.all? { |row| row.all? { |column| column != " # "}}
   end
 
-  def game_over(player)
+  def end_game(player)
     puts "#{player} wins!"
     self.reset_game
   end
@@ -138,5 +131,3 @@ class Game
     end    
   end
 end
-
-game = Game.new
