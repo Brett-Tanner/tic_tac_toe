@@ -96,14 +96,14 @@ class Game
     second_column = [@board[0][1], @board[1][1], @board[2][1]]
     third_column = [@board[0][2], @board[1][2], @board[2][2]]
     if first_column.all?(" O ") || second_column.all?(" O ") || third_column.all?(" O ") || first_column.all?(" X ") || second_column.all?(" X ") || third_column.all?(" X ")
-        true
+      true
     end
   end
 
   def diagonal_win?
     top_left = [@board[0][0], @board[1][1], @board[2][2]]
     bottom_left = [@board[2][0], @board[1][1], @board[0][2]]
-   if top_left.all?(" O ") || bottom_left.all?(" O ") || top_left.all?(" X ") || bottom_left.all?(" X ")
+    if top_left.all?(" O ") || bottom_left.all?(" O ") || top_left.all?(" X ") || bottom_left.all?(" X ")
     true
    end
   end
@@ -118,15 +118,18 @@ class Game
     puts "Would you like to play again? (y/n)"
     answer = gets.chomp.downcase
     if answer == "y"
-        self.initialize
+      @turn_count = 0
+      @board = Array.new(3) {Array.new(3, " # ")}
+      play_game()
     elsif answer == "n"
-        exit(0)
+      puts "Cya!"
+      exit(0)
     else
-        puts "***Please answer 'y' or 'n'***"
-        return self.reset_game
+      puts "***Please answer 'y' or 'n'***"
+      return self.reset_game
     end    
   end
 end
 
-# test = Game.new
-# test.play_game
+test = Game.new
+test.play_game
