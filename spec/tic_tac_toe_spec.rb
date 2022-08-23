@@ -169,7 +169,7 @@ describe Game do
       allow(game).to receive(:puts)
     end
 
-    context "coordinates too high" do
+    context "if coordinates too high" do
       
       it "displays an error message" do
         row = 3
@@ -187,7 +187,7 @@ describe Game do
       end
     end
 
-    context "coordinates too low" do
+    context "if coordinates too low" do
       it "displays an error message" do
         row = -1
         col = -10
@@ -204,7 +204,7 @@ describe Game do
       end
     end
 
-    context "only one coordinate is incorrect" do
+    context "if only one coordinate is incorrect" do
       it "displays an error message" do
         row = 3
         col = 1
@@ -221,7 +221,7 @@ describe Game do
       end
     end
 
-    context "both row & col in bounds" do
+    context "if both row & col in bounds" do
       it "returns false" do
         row = 0
         col = 2
@@ -241,9 +241,71 @@ describe Game do
 
   describe "#game_over?" do
     
+    context "when game is over" do
+
+      context "when a row is full" do
+      
+        before do
+          game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " O "]
+        end
+  
+        it "returns true" do
+          game_over = game.game_over?
+          expect(game_over).to be true
+        end
+      end
+  
+      context "when a column is full" do
+        
+        before do
+          game.board = [" # ", " X ", " # "], [" # ", " X ", " # "], [" # ", " X ", " O "]
+        end
+  
+        it "returns true" do
+          game_over = game.game_over?
+          expect(game_over).to be true
+        end
+      end
+  
+      context "when a diagonal is full" do
+        
+        before do
+          game.board = [" O ", " # ", " # "], [" # ", " O ", " # "], [" X ", " # ", " O "]
+        end
+  
+        it "returns true" do
+          game_over = game.game_over?
+          expect(game_over).to be true
+        end
+      end
+    end
+
+    context "when the game isn't over" do
+      
+      before do
+        game.board = [" O ", " X ", " # "], [" # ", " X ", " # "], [" O ", " O ", " X "]
+      end
+
+      it "returns false" do
+        game_over = game.game_over?
+        expect(game_over).to be false
+      end
+    end
   end
 
   describe "#player_turn" do
+   
+    # need to stub input here
+
+    xit "calls print_board" do
+      expect(game).to receive(:print_board)
+      game.player_turn("X")
+    end
+
+    xit "calls reset_game" do
+      expect(game).to receive(:reset_game)
+      game.player_turn("Y")
+    end
     
     context "when player is X" do
       before do
@@ -270,6 +332,32 @@ describe Game do
 
       xit "asks X for coordinates 4 times" do
         
+      end
+    end
+
+    before do
+      game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " O "]
+    end
+
+    context "if O wins" do
+
+      before do
+        game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " O "]
+      end
+
+      xit "displays 'O wins'" do
+      
+      end
+    end
+
+    context "if X wins" do
+
+      before do
+        game.board = [" # ", " X ", " # "], [" # ", " X ", " # "], [" O ", " X ", " O "]
+      end
+
+      xit "displays 'X wins'" do
+      
       end
     end
   end

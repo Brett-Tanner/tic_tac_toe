@@ -55,7 +55,7 @@ class Game
     print_board()
     @turn_count += 1
     return reset_game() if @turn_count >= 9
-    game_over?()
+    return self.end_game(player) if game_over?()
     player == "X" ? player_turn("O") : player_turn("X")
   end
 
@@ -72,7 +72,8 @@ class Game
   end
 
   def game_over?
-    return self.end_game(player) if self.row_win? || self.diagonal_win? || self.column_win?
+    return true if self.row_win? || self.diagonal_win? || self.column_win?
+    false
   end
 
   private
@@ -107,11 +108,8 @@ class Game
    end
   end
 
-  def board_full?
-    @board.all? { |row| row.all? { |column| column != " # "}}
-  end
-
   def end_game(player)
+    print_board()
     puts "#{player} wins!"
     self.reset_game
   end
@@ -122,10 +120,10 @@ class Game
     if answer == "y"
         self.initialize
     elsif answer == "n"
-        return
+        exit(0)
     else
         puts "***Please answer 'y' or 'n'***"
-        self.reset_game
+        return self.reset_game
     end    
   end
 end
