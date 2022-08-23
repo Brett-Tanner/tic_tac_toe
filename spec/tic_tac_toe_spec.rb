@@ -294,71 +294,100 @@ describe Game do
   end
 
   describe "#player_turn" do
-   
-    # need to stub input here
+
     before do
       allow(game).to receive(:puts)
-      allow(game).to receive(:gets).and_return("1 1", "1 2", "1 3", "2 1", "2 2", "2 3", "3 1", "3 2", "3 3")
+      allow(game).to receive(:gets).and_return("1 1", "1 2", "1 3", "2 1", "2 3", "2 2", "3 2", "3 1", "3 3")
+      allow(game).to receive(:reset_game)
     end
 
-    it "calls print_board" do
+    it "calls print_board 9 times" do
+      game.board = Array.new(3) {Array.new(3, " # ")}
       expect(game).to receive(:print_board).exactly(9).times
-      game.player_turn("X")
+      game.player_turn("O")
     end
 
-    xit "calls reset_game" do
+    it "calls reset_game" do
       expect(game).to receive(:reset_game).once
       game.player_turn("O")
     end
     
     context "when player is X" do
      
-      xit "asks X for coordinates 5 times" do
-        
+      before do
+        game.board = Array.new(3) {Array.new(3, " # ")}
       end
 
-      xit "asks O for coordinates 4 times" do
-        
+      it "asks X for coordinates 5 times" do
+        request = "X enter row and column separated by a space"
+        expect(game).to receive(:puts).with(request).exactly(5).times
+        game.player_turn("X")
+      end
+
+      it "asks O for coordinates 4 times" do
+        request = "O enter row and column separated by a space"
+        expect(game).to receive(:puts).with(request).exactly(4).times
+        game.player_turn("X")
       end
     end
 
     context "when player is O" do
       before do
-        
+        game.board = Array.new(3) {Array.new(3, " # ")}
       end
 
-      xit "asks O for coordinates 5 times" do
-        
+      it "asks O for coordinates 5 times" do
+        request = "O enter row and column separated by a space"
+        expect(game).to receive(:puts).with(request).exactly(5).times
+        game.player_turn("O")
       end
 
-      xit "asks X for coordinates 4 times" do
-        
+      it "asks X for coordinates 4 times" do
+        request = "X enter row and column separated by a space"
+        expect(game).to receive(:puts).with(request).exactly(4).times
+        game.player_turn("O")
       end
-    end
-
-    before do
-      game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " O "]
     end
 
     context "if O wins" do
 
       before do
-        game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " O "]
+        game.board = [" # ", " # ", " # "], [" # ", " X ", " # "], [" O ", " O ", " # "]
+        allow(game).to receive(:gets).and_return("3 3")
       end
 
-      xit "displays 'O wins'" do
-      
+      it "displays 'O wins'" do
+        vic_message = "O wins!"
+        expect(game).to receive(:puts).with(vic_message).once
+        game.player_turn("O")
       end
     end
 
     context "if X wins" do
 
       before do
-        game.board = [" # ", " X ", " # "], [" # ", " X ", " # "], [" O ", " X ", " O "]
+        game.board = [" # ", " X ", " # "], [" # ", " X ", " # "], [" X ", " X ", " # "]
+        allow(game).to receive(:gets).and_return("3 3")
       end
 
-      xit "displays 'X wins'" do
+      it "displays 'X wins'" do
+        vic_message = "X wins!"
+        expect(game).to receive(:puts).with(vic_message).once
+        game.player_turn("X")
+      end
+    end
+
+    context "when game ends" do
       
+      before do
+        game.board = [" # ", " X ", " # "], [" # ", " X ", " # "], [" X ", " X ", " # "]
+        allow(game).to receive(:gets).and_return("3 3", "n")
+      end
+
+      it "asks if you want to play again" do
+        question = "Would you like to play again? (y/n)"
+        expect(game).to receive(:reset_game).once
+        game.player_turn("X")
       end
     end
   end

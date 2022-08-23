@@ -127,3 +127,6 @@ class Game
     end    
   end
 end
+
+# test = Game.new
+# test.play_game
