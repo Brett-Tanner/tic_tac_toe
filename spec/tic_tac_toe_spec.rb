@@ -296,22 +296,23 @@ describe Game do
   describe "#player_turn" do
    
     # need to stub input here
+    before do
+      allow(game).to receive(:puts)
+      allow(game).to receive(:gets).and_return("1 1", "1 2", "1 3", "2 1", "2 2", "2 3", "3 1", "3 2", "3 3")
+    end
 
-    xit "calls print_board" do
-      expect(game).to receive(:print_board)
+    it "calls print_board" do
+      expect(game).to receive(:print_board).exactly(9).times
       game.player_turn("X")
     end
 
     xit "calls reset_game" do
-      expect(game).to receive(:reset_game)
-      game.player_turn("Y")
+      expect(game).to receive(:reset_game).once
+      game.player_turn("O")
     end
     
     context "when player is X" do
-      before do
-        allow(game).to receive(:who_first).and_return("X")
-      end
-
+     
       xit "asks X for coordinates 5 times" do
         
       end
@@ -323,7 +324,7 @@ describe Game do
 
     context "when player is O" do
       before do
-        allow(game).to receive(:who_first).and_return("O")
+        
       end
 
       xit "asks O for coordinates 5 times" do
